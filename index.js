@@ -77,7 +77,6 @@ app.get('/posts',(req, res) => {
   
     if(start>=posts.length)
     {
-      //console.log(start)
          res.json([])
     }
     else{
