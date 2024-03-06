@@ -36,10 +36,15 @@ mongoose
     })
 
 const verifyToken = (req, res, next) => {
-  const authHeader = req.headers.cookie
+  const authHeader = req.headers.authorization;
   console.log(req.headers)
   if (authHeader) {
-      const token = authHeader.split("=")[1]
+    if ( !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+  
+    const token = authorizationHeader.split(' ')[1];
+     
       jwt.verify(token, process.env.JWT_SEC, (err, user) => {
           if (err) {
               console.log("token is invalid")
