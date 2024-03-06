@@ -77,7 +77,7 @@ app.get('/', (req, res) => {
     res.send('Welcome to Post App API')
   })
 
-app.get('/posts',verifyTokenAndAuthorization,(req, res) => {
+app.get('/posts',verifyToken,(req, res) => {
     const {page} = req.query
    
     const start = page*pagination;
