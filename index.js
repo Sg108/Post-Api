@@ -1,4 +1,4 @@
-dotenv.config()
+
 const express = require('express')
 const app = express()
 const data =require('./data.json')
@@ -9,7 +9,7 @@ const CryptoJS = require("crypto-js")
 const jwt = require("jsonwebtoken")
 const User = require("./models/User")
 const posts = data.data
-
+dotenv.config()
 const pagination = 20 
 
 app.use(express.json())
