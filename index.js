@@ -1,3 +1,4 @@
+dotenv.config()
 const express = require('express')
 const app = express()
 const data =require('./data.json')
@@ -10,7 +11,7 @@ const User = require("./models/User")
 const posts = data.data
 
 const pagination = 20 
-dotenv.config()
+
 app.use(express.json())
 app.set('trust proxy', 1);
 app.use(function(req, res, next) {
