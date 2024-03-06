@@ -11,6 +11,7 @@ const posts = data.data
 
 const pagination = 20 
 dotenv.config()
+app.use(express.json())
 app.set('trust proxy', 1);
 app.use(function(req, res, next) {
   if(req.headers['x-arr-ssl'] && !req.headers['x-forwarded-proto']) {
@@ -18,11 +19,11 @@ app.use(function(req, res, next) {
   }
   return next();
 });
-app.use(express.json())
+
 app.use(cors({
-  origin:'http://localhost:3000',
+  origin:'https://post-app-kappa.vercel.app',
   credentials:true,
-  'Access-Control-Allow-Origin': 'http://localhost:3000'
+  'Access-Control-Allow-Origin': 'https://post-app-kappa.vercel.app'
 }
 ));
 
@@ -35,7 +36,7 @@ mongoose
 
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers.cookie
-  console.log(req.headers.cookie)
+  console.log(req.headers)
   if (authHeader) {
       const token = authHeader.split("=")[1]
       jwt.verify(token, process.env.JWT_SEC, (err, user) => {
@@ -70,7 +71,7 @@ app.get('/', (req, res) => {
     res.send('Welcome to Post App API')
   })
 
-app.get('/posts',(req, res) => {
+app.get('/posts',verifyTokenAndAuthorization,(req, res) => {
     const {page} = req.query
    
     const start = page*pagination;
@@ -116,7 +117,7 @@ app.post("/register", async (req, res) => {
     //console.log(password)
    
   
-    res.setHeader('Set-Cookie','jwt='+accessToken+";path=/;SameSite=None;Secure")
+    res.setHeader('Set-Cookie',`jwt=${accessToken};path=/;HttpOnly;SameSite=None;Secure`)
 
     res.status(200).json({ ...others, accessToken })
     //  res.status(201).json(savedUser)
@@ -127,6 +128,8 @@ app.post("/register", async (req, res) => {
 })
 
   
-  app.listen(3002,()=>{
+  app.listen(process.env.PORT||3002,()=>{
     console.log('server started')
   })
+
+  module.exports=app
