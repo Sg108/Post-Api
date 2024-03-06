@@ -133,4 +133,4 @@ app.post("/register", async (req, res) => {
     console.log('server started')
   })
 
-  module.exports=app
+  module.exports = app
