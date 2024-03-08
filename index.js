@@ -59,19 +59,6 @@ const verifyToken = (req, res, next) => {
   }
 }
 
-const verifyTokenAndAuthorization = (req, res, next) => {
-  verifyToken(req, res, () => {
-       console.log(req.user.id)
-   console.log(req.params.id)
-       if (req.user.id === req.params.id ) {
-          console.log("here")
-          next()
-       } else {
-          console.log("no no")
-          res.status(403).json("You are not allowed to do that!")
-      }
-  })
-}
 app.get('/', (req, res) => {
   
     res.send('Welcome to Post App API')
@@ -87,7 +74,6 @@ app.get('/posts',verifyToken,(req, res) => {
          res.json([])
     }
     else{
-      //console.log(page)
     const arr = posts.slice(start, Math.min(start + pagination,posts.length));
     res.json(arr)
     }
@@ -97,6 +83,7 @@ app.post("/login", async (req, res) => {
    const user = await User.findOne({email:req.body.email})
    if(!user)
    {
+    console.log("no user")
     return res.status(401).json({message:'User not found'})
    } 
    else{
@@ -111,7 +98,7 @@ app.post("/login", async (req, res) => {
 
   if(originalPassword != inputPassword)
   { 
-      //console.log("Wrong password")
+      console.log("Wrong password")
   return res.status(401).json({message:'Incorrect password'})
   }
 
@@ -126,8 +113,6 @@ app.post("/login", async (req, res) => {
   console.log(accessToken)
   const { password, ...others } = user._doc
   //console.log(password)
- 
-
   //res.setHeader('Set-Cookie','jwt='+accessToken+";path=/;SameSite=None;Secure")
 
   res.status(200).json({ ...others, accessToken })
@@ -167,10 +152,7 @@ app.post("/register", async (req, res) => {
     console.log(accessToken)
     const { password, ...others } = user._doc
     //console.log(password)
-   
-  
-    res.setHeader('Set-Cookie',`jwt=${accessToken};path=/;HttpOnly;SameSite=None;Secure`)
-
+    //res.setHeader('Set-Cookie',`jwt=${accessToken};path=/;HttpOnly;SameSite=None;Secure`)
     res.status(200).json({ ...others, accessToken })
     //  res.status(201).json(savedUser)
 
